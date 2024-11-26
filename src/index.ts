@@ -1,35 +1,35 @@
-import dotenv from 'dotenv';
-import RconClient from './infrastructure/rconClient';
+import {Worker} from 'worker_threads';
+import path from 'path';
 
-// Load environment variables from .env file
-dotenv.config();
+function runService(workerData: any) {
+    return new Promise((resolve, reject) => {
+        const worker = new Worker(path.resolve(__dirname, './infrastructure/workers/retrieve-players.worker.js'), {workerData});
+        let timeoutId: NodeJS.Timeout;
 
-// Access environment variables
-const hostTheIsland = process.env.HOST_SE;
-const portTheIsland = parseInt(process.env.PORT_SE || '0', 10);
-const passwordTheIsland = process.env.PASSWORD_SE;
+        worker.on('message', resolve);
+        worker.on('error', reject);
+        worker.on('exit', (code) => {
+            clearTimeout(timeoutId);
+            if (code !== 0) {
+                reject(new Error(`Worker stopped with exit code ${code}`));
+            }
+        });
 
-// Ensure the variables are defined
-if (!hostTheIsland || !portTheIsland || !passwordTheIsland) {
-    throw new Error('Missing required environment variables');
+        timeoutId = setTimeout(() => {
+            worker.terminate().then(() => {
+                reject(new Error('Worker terminated due to timeout'));
+            });
+        }, 2000); // 2 seconds timeout
+    });
 }
 
-// Create an instance of RconClient with the environment variables
-const rconClient = new RconClient(hostTheIsland, portTheIsland, passwordTheIsland);
+async function main() {
+    try {
+        const players = await runService({});
+        console.log(players);
+    } catch (err) {
+        console.error("Error:", err);
+    }
+}
 
-// Example usage
-rconClient.connect().then(() => {
-    console.log('Connected to RCON server');
-
-    // Send a gfi command to spawn a metal pickaxe in player inventory
-    rconClient.sendCommand('giveitemtoplayer 293639103 "Blueprint\'/Game/PrimalEarth/CoreBlueprints/Weapons/PrimalItem_WeaponMetalPick.PrimalItem_WeaponMetalPick\'" 1 5000 1').then((response) => {
-        console.log('Received response:', response);
-    }).catch((err) => {
-        console.error('Failed to send command:', err);
-    });
-
-}).catch((err) => {
-    console.error('Failed to connect to RCON server:', err);
-});
-
-rconClient.disconnect();
+main();
