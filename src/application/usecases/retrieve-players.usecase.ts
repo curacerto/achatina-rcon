@@ -34,7 +34,7 @@ class RetrievePlayersUseCase {
                         console.log("Disconnected");
                     }),
                 mapTimeout // Timeout duration in milliseconds for each map
-            ).catch(err => {
+            ).catch(() => {
                 console.error(`${map} timed out`);
             });
         });
