@@ -21,6 +21,7 @@
     "wtfnode": "^0.9.4"
   },
   "devDependencies": {
+    "@types/express": "^5.0.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.9.0",
     "@types/wtfnode": "^0.7.3",
