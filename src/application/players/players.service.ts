@@ -1,33 +1,48 @@
 import {Injectable} from '@nestjs/common';
-import {Worker} from 'worker_threads';
-import path from 'path';
 import {Player} from '../../domain/models/player';
+import RconClient from "../../infrastructure/rcon-client";
 
 @Injectable()
 export class PlayersService {
-    private runService(workerData: any): Promise<Player[]> {
+    runService(connectionData: any): Promise<Player[]> {
         return new Promise((resolve, reject) => {
-            const worker = new Worker(path.resolve(__dirname, '../../infrastructure/workers/retrieve-players.worker.js'), {workerData});
-            let timeoutId: NodeJS.Timeout;
+            let rconClient = new RconClient(
+                connectionData.host,
+                connectionData.port,
+                connectionData.password
+            );
+            rconClient.connect().then(() => {
+                rconClient.sendCommand('listplayers').then((response: string) => {
+                    console.log(response);
+                    let players: Player[] = [];
 
-            worker.on('message', resolve);
-            worker.on('error', reject);
-            worker.on('exit', (code) => {
-                clearTimeout(timeoutId);
-                if (code !== 0) {
-                    reject(new Error(`Worker stopped with exit code ${code}`));
-                }
-            });
+                    if (!response.startsWith('No Players')) {
+                        response.split('\n').forEach((line: string) => {
+                            if (line.trim().length === 0) {
+                                return;
+                            }
+                            // id is the content before the dot
+                            const id = Number.parseInt(line.split('.')[0]);
+                            // the name is the content between the dot and the first comma
+                            const name = line.split('.')[1].split(',')[0].trim();
+                            // the id is the content after the first comma
+                            const arkId = line.split(',')[1].trim();
+                            players.push(new Player(
+                                id,
+                                name,
+                                connectionData.map,
+                                arkId
+                            ));
+                        });
+                    }
 
-            timeoutId = setTimeout(() => {
-                worker.terminate().then(() => {
-                    reject(new Error('Worker terminated due to timeout'));
-                });
-            }, 2000); // 2 seconds timeout
+                    resolve(players);
+                }).catch(
+                    reject
+                );
+            }).catch(
+                reject
+            );
         });
-    }
-
-    async getPlayers(): Promise<Player[]> {
-        return this.runService({});
     }
 }

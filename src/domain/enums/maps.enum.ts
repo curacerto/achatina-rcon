@@ -3,5 +3,8 @@ export enum Maps {
     TC = 'The Center',
     SE = 'Scorched Earth',
     AB = 'Aberration',
-    CA = 'Club Ark'
+    EX = 'Extinction',
+    SV = 'Svartalfheim',
+    AS = 'Astraeos',
+    CA = 'Club Ark',
 }
