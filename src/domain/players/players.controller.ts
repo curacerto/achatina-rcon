@@ -1,8 +1,8 @@
 import {Controller, Get} from '@nestjs/common';
 import {PlayersService} from './players.service';
-import {Player} from '../../domain/models/player';
+import {Player} from './player';
 import config from "../../infrastructure/config";
-import {Maps} from "../../domain/enums/maps.enum";
+import {Maps} from "../enums/maps.enum";
 
 @Controller('players')
 export class PlayersController {

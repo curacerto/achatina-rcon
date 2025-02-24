@@ -1,4 +1,4 @@
-import {Player} from '../../domain/models/player';
+import {Player} from './player';
 
 export function parseListPlayersResponse(response: string, map: string): Player[] {
     const players: Player[] = [];

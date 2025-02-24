@@ -1,5 +1,5 @@
 import { parseListPlayersResponse } from './player.parser';
-import { Player } from '../../domain/models/player';
+import { Player } from './player';
 
 describe('parseListPlayersResponse', () => {
     it('should parse the response and return an array of Player objects', () => {

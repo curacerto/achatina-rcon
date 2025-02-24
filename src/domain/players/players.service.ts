@@ -1,5 +1,5 @@
 import {Injectable} from '@nestjs/common';
-import {Player} from '../../domain/models/player';
+import {Player} from './player';
 import RconClient from "../../infrastructure/rcon-client";
 
 @Injectable()
