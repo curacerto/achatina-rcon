@@ -1,4 +1,4 @@
 ### Retrieve Players
 GET http://localhost:3000/players
 Accept: application/json
-x-api-key: 1b1bcdaac8f2fc280d6e4f1369066cd5830923312a3b31db708415358b3e3109
+x-api-key: 511b5ebebba5b94b527a0390a8cce4138728470efa82b38fd4ebba2531007190

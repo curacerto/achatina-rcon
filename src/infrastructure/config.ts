@@ -55,9 +55,6 @@ const config: Config = {
     hostCA: process.env.HOST_CA,
     portCA: parseInt(process.env.PORT_CA || '0', 10),
     passwordCA: process.env.PASSWORD_CA,
-    hostG1: process.env.HOST_G1,
-    portG1: parseInt(process.env.PORT_G1 || '0', 10),
-    passwordG1: process.env.PASSWORD_G1,
 };
 
 export default config;
