@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: achatina-rcon
+    ports:
+      - "3003:3003"
+    env_file:
+      - .env
+    networks:
+      - achatina
+
+networks:
+  achatina:
+    external: true

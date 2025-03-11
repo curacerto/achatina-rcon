@@ -1,4 +1,17 @@
 ### Retrieve Players
-GET http://localhost:3000/players
+GET http://localhost:3003/players
 Accept: application/json
 x-api-key: 511b5ebebba5b94b527a0390a8cce4138728470efa82b38fd4ebba2531007190
+
+### Spawn Weapon
+POST http://localhost:3003/weapon/spawn-weapon
+Accept: application/json
+x-Api-Key: 511b5ebebba5b94b527a0390a8cce4138728470efa82b38fd4ebba2531007190
+Content-Type: application/json
+
+{
+  "map": "TI",
+  "eosId": "0002fa73227e45d4b0a5cb94b5232ac7",
+  "blueprint": "Blueprint'/Game/PrimalEarth/CoreBlueprints/Weapons/PrimalItem_WeaponOneShotRifle.PrimalItem_WeaponOneShotRifle'",
+  "isBlueprint": true
+}
